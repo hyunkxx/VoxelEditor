@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{45dbe9ff-e5a6-486f-ac20-8a71ad0ce1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{7b7ea203-6431-444d-9ef1-f16bcf1b27f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config\header">
+      <UniqueIdentifier>{f1a0ec9d-05b8-42c0-8711-d9c23339afd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\01 Graphic">
+      <UniqueIdentifier>{2602242f-42b8-44c6-9aed-bbca63ecc08c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\00 Core">
+      <UniqueIdentifier>{5e51e6dc-dd62-4a0b-8aa0-da094035254e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config\imgui">
+      <UniqueIdentifier>{ae778c5c-a1f4-4ef0-96df-896045b33e79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\02 ImGui">
+      <UniqueIdentifier>{219a18e0-804b-499f-8f90-ceffa43f2f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\03 Mesh">
+      <UniqueIdentifier>{f6a542f7-a581-46d5-83ac-b964d017676b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\03 Mesh\01 Triangle">
+      <UniqueIdentifier>{2143b341-264c-4086-85c2-c49c4e195f57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\03 Mesh\00 VIBuffer">
+      <UniqueIdentifier>{94af93a5-ce80-4da5-843a-3be48dca0937}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\03 Mesh\02 Cube">
+      <UniqueIdentifier>{4fa44639-9d53-4b74-bd6e-e470c37713f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\06 Camera">
+      <UniqueIdentifier>{69d727e9-888f-4dcc-9daf-db5e1a6aee3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\07 Managers">
+      <UniqueIdentifier>{d054d7f4-6119-433c-93af-d140eea5dc18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\07 Managers\CubeManager">
+      <UniqueIdentifier>{4bbe6707-2ae0-4a77-add5-41a4008c7565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\05 GameObject">
+      <UniqueIdentifier>{4b9d4895-9ba2-4d4b-a72a-cba0769efe4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\08. Ray">
+      <UniqueIdentifier>{0716954c-0836-4a8a-b37f-7c66dc92e664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\09. Axis">
+      <UniqueIdentifier>{8fcecfdb-eef5-4c3f-a125-1f505ece240a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\10. SaveLoader">
+      <UniqueIdentifier>{760e8df6-2a8e-41a2-a8fa-43017981e93b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\11. InputManager">
+      <UniqueIdentifier>{b3d47840-9286-4f39-b707-c4b59742dce2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VoxelEditor.rc">
+      <Filter>res</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>res</Filter>
+    </Image>
+    <Image Include="VoxelEditor.ico">
+      <Filter>res</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Graphic.cpp">
+      <Filter>src\01 Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\VoxelEditor.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Core.cpp">
+      <Filter>src\00 Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImGui\imgui.cpp">
+      <Filter>config\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImGui\imgui_demo.cpp">
+      <Filter>config\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImGui\imgui_draw.cpp">
+      <Filter>config\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImGui\imgui_impl_dx9.cpp">
+      <Filter>config\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImGui\imgui_impl_win32.cpp">
+      <Filter>config\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImGui\imgui_tables.cpp">
+      <Filter>config\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImGui\imgui_widgets.cpp">
+      <Filter>config\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ImguiManager.cpp">
+      <Filter>src\02 ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Triangle.cpp">
+      <Filter>src\03 Mesh\01 Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\VIBuffer.cpp">
+      <Filter>src\03 Mesh\00 VIBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Cube.cpp">
+      <Filter>src\03 Mesh\02 Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Camera.cpp">
+      <Filter>src\06 Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CubeManager.cpp">
+      <Filter>src\07 Managers\CubeManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\GameObject.cpp">
+      <Filter>src\05 GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Ray.cpp">
+      <Filter>src\08. Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Axis.cpp">
+      <Filter>src\09. Axis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SaveLoader.cpp">
+      <Filter>src\10. SaveLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InputManager.cpp">
+      <Filter>src\11. InputManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Graphic.h">
+      <Filter>src\01 Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\VoxelEditor.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Typedef.h">
+      <Filter>config\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Define.h">
+      <Filter>config\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Template.h">
+      <Filter>config\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Core.h">
+      <Filter>src\00 Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImGui\imconfig.h">
+      <Filter>config\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImGui\imgui.h">
+      <Filter>config\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImGui\imgui_impl_dx9.h">
+      <Filter>config\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImGui\imgui_impl_win32.h">
+      <Filter>config\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImGui\imgui_internal.h">
+      <Filter>config\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImGui\imstb_rectpack.h">
+      <Filter>config\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImGui\imstb_textedit.h">
+      <Filter>config\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImGui\imstb_truetype.h">
+      <Filter>config\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\ImguiManager.h">
+      <Filter>src\02 ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Struct.h">
+      <Filter>config\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Triangle.h">
+      <Filter>src\03 Mesh\01 Triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\VIBuffer.h">
+      <Filter>src\03 Mesh\00 VIBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Cube.h">
+      <Filter>src\03 Mesh\02 Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Camera.h">
+      <Filter>src\06 Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CubeManager.h">
+      <Filter>src\07 Managers\CubeManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\GameObject.h">
+      <Filter>src\05 GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Ray.h">
+      <Filter>src\08. Ray</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Enum.h">
+      <Filter>config\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Axis.h">
+      <Filter>src\09. Axis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\SaveLoader.h">
+      <Filter>src\10. SaveLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\InputManager.h">
+      <Filter>src\11. InputManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
