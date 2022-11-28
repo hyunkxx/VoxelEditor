@@ -513,7 +513,7 @@ void CCubeManager::ShowSelectedCubeInfo()
 
 	if (m_pSeletedCube)
 	{ 
-		string strCubeInfo = "= selected cube ID " + to_string(m_pSeletedCube->m_nIndex);
+		string strCubeInfo = " selected cube ID " + to_string(m_pSeletedCube->m_nIndex);
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0, 1, 0, 5), strCubeInfo.c_str());
 
@@ -547,7 +547,7 @@ void CCubeManager::ShowSelectedCubeInfo()
 	{
 		float temp[3]{ 0.f,0.f,0.f };
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 0, 0, 5), "= nullptr");
+		ImGui::TextColored(ImVec4(1, 0, 0, 5), " nullptr");
 		ImGui::InputFloat3("  scale", vec3(0.f, 0.f, 0.f));
 		ImGui::SliderFloat3("", temp, 0, 0);
 		ImGui::InputFloat3("  angle", vec3(0.f, 0.f, 0.f));
