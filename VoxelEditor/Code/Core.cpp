@@ -43,7 +43,9 @@ HRESULT CCore::Initalize()
 	m_pAxis = new CAxis(m_pGraphic->GetDevice());
 	m_pCamera = new CCamera(m_pGraphic->GetDevice());
 	static_cast<CCamera*>(m_pCamera)->SetupCamera({ 0.f, 10.f, -20.f }, { 0.f,0.f,0.f });
-
+	CCubeManager::GetInstance()->CreateCube(CUBE_TYPE::BODY, { 1.f,0.5f,2.f }, vec3{ 0.f,0.f,0.f }, {0.f,0.f,0.f}, D3DCOLOR_RGBA(255,255,255,255));
+	CCubeManager::GetInstance()->CreateCube(CUBE_TYPE::BODY, { 0.2f,0.5f,2.f }, vec3{ 0.f,0.f,0.f }, { -1.2f,-0.4f,0.f }, D3DCOLOR_RGBA(255, 255, 255, 255));
+	CCubeManager::GetInstance()->CreateCube(CUBE_TYPE::BODY, { 0.2f,0.5f,2.f }, vec3{ 0.f,0.f,0.f }, {  1.2f,-0.4f,0.f }, D3DCOLOR_RGBA(255, 255, 255, 255));
 	return result;
 }
 
