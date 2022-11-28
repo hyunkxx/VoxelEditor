@@ -15,6 +15,7 @@ public:
 private:
 	static void LoadHeadMesh();
 	static void LoadBodyMesh();
+	static void LoadObjectMesh();
 private:
 	static wstring m_strDirPath;
 };

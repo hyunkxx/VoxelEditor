@@ -12,5 +12,6 @@ private:
 	static void MouseLeftButton();
 	static void KeyObjectMove();
 	static void ColorPickChange();
+	static void ObjectClone();
 };
 

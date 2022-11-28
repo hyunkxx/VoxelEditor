@@ -92,6 +92,10 @@ void ImguiManager::DrawMainMenuBar()
 			{
 				CSaveLoader::LoadFile(CUBE_TYPE::BODY);
 			}
+			if (ImGui::MenuItem("load object mesh"))
+			{
+				CSaveLoader::LoadFile(CUBE_TYPE::OBJECT);
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();

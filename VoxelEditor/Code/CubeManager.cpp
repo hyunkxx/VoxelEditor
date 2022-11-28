@@ -8,8 +8,9 @@
 IMPLEMENT_SINGLETON(CCubeManager)
 
 const char* CCubeManager::current_item = "None";
-bool CCubeManager::bHeadView = true;
-bool CCubeManager::bBoadView = true;
+bool CCubeManager::bHeadView	= true;
+bool CCubeManager::bBoadView	= true;
+bool CCubeManager::bObjectView  = true;
 
 CCubeManager::CCubeManager()
 	: m_rotAngle({ 0.f,0.f,0.f })
@@ -18,6 +19,7 @@ CCubeManager::CCubeManager()
 
 	m_vecHead.reserve(30);
 	m_vecBody.reserve(30);
+	m_vecObject.reserve(30);
 }
 
 CCubeManager::~CCubeManager()
@@ -26,6 +28,9 @@ CCubeManager::~CCubeManager()
 		delete *iter;
 
 	for (auto& iter = m_vecBody.begin(); iter != m_vecBody.end(); iter++)
+		delete *iter;
+
+	for (auto& iter = m_vecObject.begin(); iter != m_vecObject.end(); iter++)
 		delete *iter;
 }
 
@@ -38,9 +43,11 @@ void CCubeManager::Render()
 	CGraphic::GetInstance()->GetDevice()->SetRenderState(D3DRS_ZENABLE, TRUE);
 	CGraphic::GetInstance()->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
-	wstring headCount = to_wstring(m_vecHead.size());
-	wstring bodyCount = to_wstring(m_vecBody.size());
-	wstring windowText = headCount + L" " + bodyCount;
+	wstring headCount	= to_wstring(m_vecHead.size());
+	wstring bodyCount	= to_wstring(m_vecBody.size());
+	wstring objectCount = to_wstring(m_vecObject.size());
+
+	wstring windowText = headCount + L" " + bodyCount + L" " + objectCount;
 	SetWindowTextW(g_hWnd, windowText.c_str());
 
 	if (bHeadView)
@@ -110,6 +117,40 @@ void CCubeManager::Render()
 			(*iter)->Render();
 		}
 	}
+
+	if (bObjectView)
+	{
+		for (auto iter = m_vecObject.begin(); iter != m_vecObject.end(); ++iter)
+		{
+			matrix matScale, matTrans, matRotation, matPRotation;
+			matrix matRot[3];
+			matrix matPRot[3];
+
+			D3DXMatrixIdentity(&matTrans);
+			D3DXMatrixIdentity(&matRotation);
+			D3DXMatrixIdentity(&matPRotation);
+
+			D3DXMatrixScaling(&matScale, (*iter)->m_vScale.x, (*iter)->m_vScale.y, (*iter)->m_vScale.z);
+
+			D3DXMatrixRotationX(&matRot[2], D3DXToRadian((*iter)->m_Angle.x));
+			D3DXMatrixRotationY(&matRot[1], D3DXToRadian((*iter)->m_Angle.y));
+			D3DXMatrixRotationZ(&matRot[0], D3DXToRadian((*iter)->m_Angle.z));
+
+			D3DXMatrixRotationX(&matPRot[2], D3DXToRadian(m_rotAngle.x));
+			D3DXMatrixRotationY(&matPRot[1], D3DXToRadian(m_rotAngle.y));
+			D3DXMatrixRotationZ(&matPRot[0], D3DXToRadian(m_rotAngle.z));
+
+			matRotation = matRot[0] * matRot[1] * matRot[2];
+			matPRotation = matPRot[0] * matPRot[1] * matPRot[2];
+
+			D3DXMatrixTranslation(&matTrans, (*iter)->m_vPos.x, (*iter)->m_vPos.y, (*iter)->m_vPos.z);
+			(*iter)->m_matWorld = matScale * matRotation * matTrans * matPRotation;
+
+			CGraphic::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &(*iter)->m_matWorld);
+
+			(*iter)->Render();
+		}
+	}
 }
 
 void CCubeManager::RenderUI()
@@ -117,6 +158,17 @@ void CCubeManager::RenderUI()
 	/* Inspecter */
 	ShowInspector();
 	ShowSelectedCubeInfo();
+}
+
+void CCubeManager::RenderIndex()
+{
+	if (all_object.empty())
+		return;
+
+	for (auto object = all_object.begin(); object != all_object.end(); ++object)
+	{
+		(*object)->RenderIndex();
+	}
 }
 
 void CCubeManager::DeleteCube()
@@ -165,6 +217,25 @@ void CCubeManager::DeleteCube()
 				}
 			}
 			break;
+		case CUBE_TYPE::OBJECT:
+			for (auto& iter = m_vecObject.begin(); iter != m_vecObject.end(); ++iter)
+			{
+				if (nID == (*iter)->m_nIndex)
+				{
+					for (auto& item = all_object.begin(); item != all_object.end(); ++item)
+					{
+						if (nID == (*item)->m_nIndex)
+						{
+							all_object.erase(item);
+							break;
+						}
+					}
+
+					m_vecObject.erase(iter);
+					return;
+				}
+			}
+			break;
 		default:
 			MSG_BOX("m_pSeletedCube CUBE_TYPE Unknown");
 			break;
@@ -189,6 +260,8 @@ bool CCubeManager::Pick()
 	for (auto& iter = m_vecHead.begin(); iter != m_vecHead.end(); ++iter)
 		m_vecCombine.push_back(*iter);
 	for (auto& iter = m_vecBody.begin(); iter != m_vecBody.end(); ++iter)
+		m_vecCombine.push_back(*iter);
+	for (auto& iter = m_vecObject.begin(); iter != m_vecObject.end(); ++iter)
 		m_vecCombine.push_back(*iter);
 
 	for (auto& iter = m_vecCombine.begin(); iter != m_vecCombine.end() ; ++iter)
@@ -346,9 +419,16 @@ void CCubeManager::DeleteMesh(CUBE_TYPE eType)
 			delete *iter;
 		}
 		break;
+	case CUBE_TYPE::OBJECT:
+		for (auto& iter = m_vecBody.begin(); iter != m_vecBody.end(); ++iter)
+		{
+			delete *iter;
+		}
+		break;
 	}
 	m_vecHead.clear();
 	m_vecBody.clear();
+	m_vecObject.clear();
 }
 
 void CCubeManager::ShowInspector()
@@ -361,7 +441,7 @@ void CCubeManager::ShowInspector()
 	ImGui::InputFloat3("  rotation  ", fRotation);
 	ImGui::InputFloat3("  position  ", fPos);
 
-	const char* items[] = { "Head", "Body", "None" };
+	const char* items[] = { "Head", "Body", "Object", "None" };
 	if (ImGui::BeginCombo("  cube type", current_item))
 	{
 		for (int n = 0; n < IM_ARRAYSIZE(items); n++)
@@ -387,6 +467,8 @@ void CCubeManager::ShowInspector()
 			CreateCube(CUBE_TYPE::HEAD, { fScale }, vec3(fRotation), { fPos }, color);
 		if (!strcmp(current_item, "Body"))
 			CreateCube(CUBE_TYPE::BODY, { fScale }, vec3(fRotation), { fPos }, color);
+		if (!strcmp(current_item, "Object"))
+			CreateCube(CUBE_TYPE::OBJECT, { fScale }, vec3(fRotation), { fPos }, color);
 		if (!strcmp(current_item, "None"))
 			MSG_BOX("박스 타입 지정하라고 했어 안했어 =ㅅ=");
 	}
@@ -402,7 +484,9 @@ void CCubeManager::ShowInspector()
 	ImGui::SameLine();
 	ImGui::Checkbox(" body ", &bBoadView);
 	ImGui::SameLine();
-	if (ImGui::Checkbox(" wire frame", &bWireFrame))
+	ImGui::Checkbox(" object", &bObjectView);
+	ImGui::SameLine();
+	if (ImGui::Checkbox(" wire ", &bWireFrame))
 	{
 		if(bWireFrame)
 			CGraphic::GetInstance()->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
@@ -421,7 +505,7 @@ void CCubeManager::ShowInspector()
 
 void CCubeManager::ShowSelectedCubeInfo()
 {
-	ImGui::SetNextWindowSize(ImVec2(IMGUI_INSPECTOR_WIDTH, 235));
+	ImGui::SetNextWindowSize(ImVec2(IMGUI_INSPECTOR_WIDTH, 230));
 	ImGui::SetNextWindowPos(ImVec2(WIN_WIDTH - IMGUI_INSPECTOR_WIDTH, 470));
 
 	ImGui::Begin("Seleted Cube", nullptr, ImGuiWindowFlags_NoResize);
@@ -491,7 +575,7 @@ void CCubeManager::ShowObjectList()
 	ImGui::SetNextWindowPos(ImVec2(WIN_WIDTH - IMGUI_INSPECTOR_WIDTH, 700));
 	ImGui::Begin("Object List", 0 , ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
 	
-	ImGui::ListBoxHeader("asd", ImVec2(200, 400));
+	ImGui::ListBoxHeader("cube", ImVec2(200, 400));
 
 	for (auto iter = all_object.begin(); iter != all_object.end(); ++iter)
 	{
@@ -537,6 +621,9 @@ void CCubeManager::CreateCube(CUBE_TYPE eType, vec3 vScale, Rotation tagRotation
 		break;
 	case CUBE_TYPE::BODY:
 		m_vecBody.push_back(pCube);
+		break;
+	case CUBE_TYPE::OBJECT:
+		m_vecObject.push_back(pCube);
 		break;
 	case CUBE_TYPE::END:
 		MSG_BOX("박스 타입을 지정하세요 =ㅅ=");

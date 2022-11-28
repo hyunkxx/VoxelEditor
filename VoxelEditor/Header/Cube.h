@@ -14,6 +14,7 @@ public:
 	vec3 GetPosition() { return m_vPos; };
 	virtual HRESULT Initalize() override;
 	virtual HRESULT Initalize(D3DCOLOR color) override;
+	virtual void	RenderIndex();
 public:
 	void ApplyColor();
 	int32 GetMaxID() {	return s_nID;	};

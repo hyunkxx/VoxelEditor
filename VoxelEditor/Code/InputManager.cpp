@@ -20,6 +20,7 @@ void CInputManager::KeyInput()
 	ColorPickChange();
 	KeyObjectMove();
 	SaveLoadCheck();
+	ObjectClone();
 	DeleteCube();
 }
 
@@ -89,7 +90,11 @@ void CInputManager::ColorPickChange()
 	if (ImGui::GetIO().MouseClicked[ImGuiMouseButton_Left] && ImGui::GetIO().MousePos.x <= WIN_WIDTH - IMGUI_INSPECTOR_WIDTH)
 	{
 		if (CCubeManager::GetInstance()->Pick())
-			CCubeManager::GetInstance()->curColor = CCubeManager::GetInstance()->GetSeletedObject()->dwColor;
+		{
+			CCubeManager::GetInstance()->curColor	 = CCubeManager::GetInstance()->GetSeletedObject()->dwColor;
+			CCubeManager::GetInstance()->m_tempScale = CCubeManager::GetInstance()->GetSeletedObject()->m_vScale;
+			memcpy(&CCubeManager::GetInstance()->m_tempRotation, &CCubeManager::GetInstance()->GetSeletedObject()->m_Angle, sizeof(Rotation));
+		}
 	}
 
 	if (ImGui::GetIO().MouseClicked[ImGuiMouseButton_Right] && ImGui::GetIO().MousePos.x <= WIN_WIDTH - IMGUI_INSPECTOR_WIDTH)
@@ -98,6 +103,18 @@ void CInputManager::ColorPickChange()
 		{
 			CCubeManager::GetInstance()->GetSeletedObject()->dwColor = CCubeManager::GetInstance()->curColor;
 			CCubeManager::GetInstance()->GetSeletedObject()->ApplyColor();
+		}
+	}
+}
+
+void CInputManager::ObjectClone()
+{
+	if (ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_F12) && ImGui::GetIO().MousePos.x <= WIN_WIDTH - IMGUI_INSPECTOR_WIDTH)
+	{
+		if (CCubeManager::GetInstance()->Pick())
+		{
+			CCubeManager::GetInstance()->GetSeletedObject()->m_vScale = CCubeManager::GetInstance()->m_tempScale;
+			memcpy(&CCubeManager::GetInstance()->GetSeletedObject()->m_Angle, &CCubeManager::GetInstance()->m_tempRotation, sizeof(Rotation));
 		}
 	}
 }

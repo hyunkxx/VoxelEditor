@@ -58,7 +58,7 @@ void CCore::Update()
 void CCore::Render()
 {
 	UIFrame();
-
+	
 	m_pGraphic->RenderBegin({0.5f,0.5f,0.5f,1.f});
 	CCubeManager::GetInstance()->Render();
 	m_pAxis->Render();
@@ -105,6 +105,7 @@ void CCore::UIFrame()
 {
 	ImguiManager::GetInstance()->NewFrame();
 	m_pCamera->RenderUI();
+	CCubeManager::GetInstance()->RenderIndex();
 	CCubeManager::GetInstance()->RenderUI();
 
 

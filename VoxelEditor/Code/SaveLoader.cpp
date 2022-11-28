@@ -18,9 +18,11 @@ void CSaveLoader::SaveFile()
 {
 	vector<CCube*> vecHead = CCubeManager::GetInstance()->GetHeadMesh();
 	vector<CCube*> vecBody = CCubeManager::GetInstance()->GetBodyMesh();
+	vector<CCube*> vecObject = CCubeManager::GetInstance()->GetoObjectMesh();
 
 	int headCubeCount = static_cast<int>(vecHead.size());
 	int bodyCubeCount = static_cast<int>(vecBody.size());
+	int objectCubeCount = static_cast<int>(vecObject.size());
 
 	OPENFILENAME OFN;
 	tchar filePathName[100] = L"";
@@ -41,6 +43,45 @@ void CSaveLoader::SaveFile()
 		DWORD dwRead = 0;
 		vec3 transBuf[3];
 		D3DXCOLOR colBuf;
+
+		if (objectCubeCount > 0)
+		{
+			wstring strFileEnd = L"_object.bin";
+			wstring fileName = OFN.lpstrFile + strFileEnd;
+			HANDLE hObject = CreateFile(
+				fileName.c_str(),
+				GENERIC_WRITE,
+				0, NULL,
+				CREATE_ALWAYS,
+				FILE_ATTRIBUTE_NORMAL,
+				NULL);
+
+			if (hObject == INVALID_HANDLE_VALUE)
+			{
+				MSG_BOX("failed hObject open");
+				return;
+			}
+
+			WriteFile(hObject, &objectCubeCount, sizeof(int), &dwRead, NULL);
+			for (auto& iter = vecObject.begin(); iter != vecObject.end(); iter++)
+			{
+				vec3 scale = (*iter)->m_vScale;
+				vec3 rotation; memcpy(&rotation, &(*iter)->m_Angle, sizeof(vec3));
+				vec3 position = (*iter)->m_vPos;
+				D3DXCOLOR color = (*iter)->dwColor;
+
+				memcpy(&transBuf[0], &scale, sizeof(vec3));
+				memcpy(&transBuf[1], &rotation, sizeof(vec3));
+				memcpy(&transBuf[2], &position, sizeof(vec3));
+				memcpy(&colBuf, &color, sizeof(D3DXCOLOR));
+
+				WriteFile(hObject, transBuf[0], sizeof(vec3), &dwRead, NULL);
+				WriteFile(hObject, transBuf[1], sizeof(vec3), &dwRead, NULL);
+				WriteFile(hObject, transBuf[2], sizeof(vec3), &dwRead, NULL);
+				WriteFile(hObject, &colBuf, sizeof(D3DXCOLOR), &dwRead, NULL);
+			}
+			CloseHandle(hObject);
+		}
 
 		if (headCubeCount > 0)
 		{
@@ -131,6 +172,9 @@ void CSaveLoader::LoadFile(CUBE_TYPE eType)
 		break;
 	case CUBE_TYPE::BODY:
 		LoadBodyMesh();
+		break;
+	case CUBE_TYPE::OBJECT:
+		LoadObjectMesh();
 		break;
 	case CUBE_TYPE::END:
 		break;
@@ -286,6 +330,81 @@ void CSaveLoader::LoadBodyMesh()
 			memcpy(&color, &buf, sizeof(D3DXCOLOR));
 
 			CCubeManager::GetInstance()->CreateCube(CUBE_TYPE::BODY, scale, rotation, position, color);
+		}
+		CloseHandle(hBody);
+	}
+}
+
+void CSaveLoader::LoadObjectMesh()
+{
+	vector<CCube*> vecObject;
+
+	OPENFILENAME OFN;
+	tchar filePathName[100] = L"";
+	tchar lpstrFile[100] = L"";
+	static tchar filter[] = L"All file\0*.*\0Text file\0*.txt\0FBX file\0*.fbx";
+
+	memset(&OFN, 0, sizeof(OPENFILENAME));
+	OFN.lStructSize = sizeof(OPENFILENAME);
+	OFN.hwndOwner = g_hWnd;
+	OFN.lpstrFilter = filter;
+	OFN.lpstrFile = lpstrFile;
+	OFN.nMaxFile = 100;
+	OFN.lpstrInitialDir = m_strDirPath.c_str();
+
+	if (GetOpenFileName(&OFN))
+	{
+		HANDLE hBody = CreateFile(
+			OFN.lpstrFile,
+			GENERIC_READ,
+			0, NULL,
+			OPEN_EXISTING,
+			FILE_ATTRIBUTE_NORMAL,
+			nullptr);
+
+		if (hBody == INVALID_HANDLE_VALUE)
+		{
+			MSG_BOX("failed hRead open");
+			return;
+		}
+
+
+		char buf[100];
+		ZeroMemory(&buf, sizeof(buf));
+
+		DWORD dwRead = 0;
+
+		int bodyCubeCount;
+		char cntBuf[4];
+		ZeroMemory(&cntBuf, sizeof(cntBuf));
+		ReadFile(hBody, cntBuf, sizeof(int), &dwRead, NULL);
+		bodyCubeCount = static_cast<int>(*cntBuf);
+
+		for (int i = 0; i < bodyCubeCount; i++)
+		{
+			vec3 scale;
+			vec3 rotation;
+			vec3 position;
+			D3DXCOLOR color;
+
+			ZeroMemory(&scale, sizeof(vec3));
+			ZeroMemory(&rotation, sizeof(vec3));
+			ZeroMemory(&position, sizeof(vec3));
+			ZeroMemory(&color, sizeof(D3DXCOLOR));
+
+			ReadFile(hBody, buf, sizeof(vec3), &dwRead, NULL);
+			memcpy(&scale, &buf, sizeof(vec3));
+
+			ReadFile(hBody, buf, sizeof(vec3), &dwRead, NULL);
+			memcpy(&rotation, &buf, sizeof(vec3));
+
+			ReadFile(hBody, buf, sizeof(vec3), &dwRead, NULL);
+			memcpy(&position, &buf, sizeof(vec3));
+
+			ReadFile(hBody, buf, sizeof(D3DXCOLOR), &dwRead, NULL);
+			memcpy(&color, &buf, sizeof(D3DXCOLOR));
+
+			CCubeManager::GetInstance()->CreateCube(CUBE_TYPE::OBJECT, scale, rotation, position, color);
 		}
 		CloseHandle(hBody);
 	}

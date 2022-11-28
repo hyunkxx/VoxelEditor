@@ -242,6 +242,11 @@ HRESULT CCube::Initalize(D3DCOLOR color)
 	return S_OK;
 }
 
+void CCube::RenderIndex()
+{
+
+}
+
 void CCube::ApplyColor()
 {
 	Vertex*	pVertex = nullptr;
