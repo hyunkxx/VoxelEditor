@@ -30,7 +30,7 @@ CCamera::~CCamera()
 
 void CCamera::OhtoCamera()
 {
-	D3DXMatrixOrthoLH(&m_matProj, WIN_WIDTH/40 , WIN_HEIGHT/40, 0.1f, 1000.f);
+	D3DXMatrixOrthoLH(&m_matProj, WIN_WIDTH/40 , WIN_HEIGHT/40, -1.f, 1000.f);
 	m_pDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
 }
 
@@ -59,7 +59,7 @@ bool CCamera::ChangeView()
 	if (ImGui::GetIO().KeysDown[VK_F1])
 	{
 		ZeroMemory(&(CCubeManager::GetInstance()->m_rotAngle),sizeof(Rotation));
-		D3DXMatrixLookAtLH(&view, new vec3{ 0.f,0.f,20.f }, new vec3{0.f,0.f,0.f}, &vUP);
+		D3DXMatrixLookAtLH(&view, new vec3{ 0.f,0.f,100.f }, new vec3{0.f,0.f,0.f}, &vUP);
 		m_pDevice->SetTransform(D3DTS_VIEW, &view);
 		CameraState[(UINT)VIEW::FORWARD] = true;
 		return true;
@@ -68,7 +68,7 @@ bool CCamera::ChangeView()
 	else if (ImGui::GetIO().KeysDown[VK_F2])
 	{
 		ZeroMemory(&(CCubeManager::GetInstance()->m_rotAngle), sizeof(Rotation));
-		D3DXMatrixLookAtLH(&view, new vec3{ 0.f,0.f,-20.f }, new vec3{ 0.f,0.f,0.f }, &vUP);
+		D3DXMatrixLookAtLH(&view, new vec3{ 0.f,0.f,-100.f }, new vec3{ 0.f,0.f,0.f }, &vUP);
 		m_pDevice->SetTransform(D3DTS_VIEW, &view);
 		CameraState[(UINT)VIEW::BACKWARD] = true;
 		return true;
@@ -77,7 +77,7 @@ bool CCamera::ChangeView()
 	else if (ImGui::GetIO().KeysDown[VK_F3])
 	{
 		ZeroMemory(&(CCubeManager::GetInstance()->m_rotAngle), sizeof(Rotation));
-		D3DXMatrixLookAtLH(&view, new vec3{ 20.f,0.f,0.f }, new vec3{ 0.f,0.f,0.f }, &vUP);
+		D3DXMatrixLookAtLH(&view, new vec3{ 100.f,0.f,0.f }, new vec3{ 0.f,0.f,0.f }, &vUP);
 		m_pDevice->SetTransform(D3DTS_VIEW, &view);
 		CameraState[(UINT)VIEW::RIGHT] = true;
 		return true;
@@ -86,7 +86,7 @@ bool CCamera::ChangeView()
 	else if (ImGui::GetIO().KeysDown[VK_F4])
 	{
 		ZeroMemory(&(CCubeManager::GetInstance()->m_rotAngle), sizeof(Rotation));
-		D3DXMatrixLookAtLH(&view, new vec3{ -20.f,0.f,0.f }, new vec3{ 0.f,0.f,0.f }, &vUP);
+		D3DXMatrixLookAtLH(&view, new vec3{ -100.f,0.f,0.f }, new vec3{ 0.f,0.f,0.f }, &vUP);
 		m_pDevice->SetTransform(D3DTS_VIEW, &view);
 		CameraState[(UINT)VIEW::LEFT] = true;
 		return true;
@@ -94,7 +94,7 @@ bool CCamera::ChangeView()
 	else if (ImGui::GetIO().KeysDown[VK_F5])
 	{
 		ZeroMemory(&(CCubeManager::GetInstance()->m_rotAngle), sizeof(Rotation));
-		D3DXMatrixLookAtLH(&view, new vec3{ 0.f,20.f,0.f }, new vec3{ -1.f,0.f,0.f }, &vUP);
+		D3DXMatrixLookAtLH(&view, new vec3{ 0.f,100.f,0.f }, new vec3{ -1.f,0.f,0.f }, &vUP);
 		m_pDevice->SetTransform(D3DTS_VIEW, &view);
 		CameraState[(UINT)VIEW::UP] = true;
 		return true;
@@ -102,7 +102,7 @@ bool CCamera::ChangeView()
 	else if (ImGui::GetIO().KeysDown[VK_F6])
 	{
 		ZeroMemory(&(CCubeManager::GetInstance()->m_rotAngle), sizeof(Rotation));
-		D3DXMatrixLookAtLH(&view, new vec3{ 0.f,-20.f,0.f }, new vec3{ -1.f,0.f,0.f }, &vUP);
+		D3DXMatrixLookAtLH(&view, new vec3{ 0.f,-100.f,0.f }, new vec3{ -1.f,0.f,0.f }, &vUP);
 		m_pDevice->SetTransform(D3DTS_VIEW, &view);
 		CameraState[(UINT)VIEW::DOWN] = true;
 		return true;
@@ -245,6 +245,14 @@ void CCamera::Update(const double& fDeltaTime)
 	{
 		D3DXMatrixLookAtLH(&m_matView, &m_vPos, &m_vAt, &vUP);
 		m_pDevice->SetTransform(D3DTS_VIEW, &m_matView);
+
+		D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFOV, WIN_WIDTH / WIN_HEIGHT, 0.1f, 1000.f);
+		m_pDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
+	}
+	else
+	{
+		D3DXMatrixOrthoLH(&m_matProj, 10, 10, 0.f, 100.f);
+		m_pDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
 	}
 }
 
