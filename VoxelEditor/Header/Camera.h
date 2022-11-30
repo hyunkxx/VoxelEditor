@@ -54,5 +54,8 @@ private:
 	float m_fHeight;
 	float m_fWidth;
 	float m_fFOV;
+
+	float m_fOrthoX = 10.f;
+	float m_fOrthoY = 10.f;
 };
 

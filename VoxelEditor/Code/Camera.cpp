@@ -251,7 +251,24 @@ void CCamera::Update(const double& fDeltaTime)
 	}
 	else
 	{
-		D3DXMatrixOrthoLH(&m_matProj, 10, 10, 0.f, 100.f);
+		if (ImGui::IsKeyPressed(ImGuiKey_M, true))
+		{
+			if (m_fOrthoX > 40.f && m_fOrthoY > 40.f)
+				return;
+
+			m_fOrthoX += .5f;
+			m_fOrthoY += .5f;
+		}
+		if (ImGui::IsKeyPressed(ImGuiKey_N, true))
+		{
+			if (m_fOrthoX < 10.f && m_fOrthoY < 10.f)
+				return;
+
+			m_fOrthoX -= .5f;
+			m_fOrthoY -= .5f;
+		}
+
+		D3DXMatrixOrthoLH(&m_matProj, m_fOrthoX, m_fOrthoY, 0.f, 100.f);
 		m_pDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
 	}
 }
